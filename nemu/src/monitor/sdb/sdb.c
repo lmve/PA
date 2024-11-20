@@ -23,7 +23,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-
+word_t paddr_read(paddr_t addr, int len);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -49,8 +49,50 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
   return -1;
 }
+
+static int cmd_si(char *args) {
+  const int DefaultStep = 1;
+  int step = 1;
+  if (args == NULL) {
+    cpu_exec(DefaultStep);
+  } else {
+    sscanf(args, "%d", &step);
+    cpu_exec(step);
+  }
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  if (args == NULL) {
+    printf("Which  info you want\n");
+  } else if (strcmp(args, "r") == 0) {
+    // 打印寄存器状态
+    isa_reg_display();
+  } else if (strcmp(args, "w") == 0) {
+    // 打印监视点信息
+  }
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  char* n = strtok(args," ");
+  char* baseaddr = strtok(NULL," ");
+  int len = 0;
+  paddr_t addr = 0;
+  sscanf(n, "%d", &len);
+  sscanf(baseaddr,"%x", &addr);
+  for(int i = 0 ; i < len ; i ++)
+  {
+    printf("%x\n",paddr_read(addr,4));//addr len
+    addr = addr + 4;
+  }
+  return 0;
+}
+
+
 
 static int cmd_help(char *args);
 
@@ -62,7 +104,9 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "x", "Scan memory", cmd_x},
+  { "info", "Print the program status", cmd_info},
+  { "si", "Make the program execute N instructions step by step and then pause, When N is  not specified default 1.", cmd_si},
   /* TODO: Add more commands */
 
 };
@@ -73,7 +117,6 @@ static int cmd_help(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
   int i;
-
   if (arg == NULL) {
     /* no argument given */
     for (i = 0; i < NR_CMD; i ++) {

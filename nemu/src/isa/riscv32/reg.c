@@ -24,6 +24,12 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+  // 打印所有寄存器的信息
+  int length = sizeof(regs) / sizeof(regs[0]);
+  int i;
+  for(i=0; i<length; i++) {
+    printf("reg$%s\t\t%d\n",regs[i], cpu.gpr[i]);
+  }
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {

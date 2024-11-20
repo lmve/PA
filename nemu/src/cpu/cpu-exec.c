@@ -71,14 +71,17 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #endif
 }
 
+/*
+ * 在模拟器中执行指令的循环，每次循环执行一条指令，并更新指令计数器和模拟器状态。
+*/
 static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) {
-    exec_once(&s, cpu.pc);
-    g_nr_guest_inst ++;
-    trace_and_difftest(&s, cpu.pc);
+    exec_once(&s, cpu.pc);   // 用于执行一条指令
+    g_nr_guest_inst ++;      // 用于记录模拟器执行的指令数。
+    trace_and_difftest(&s, cpu.pc);  //用于跟踪指令执行情况
     if (nemu_state.state != NEMU_RUNNING) break;
-    IFDEF(CONFIG_DEVICE, device_update());
+    IFDEF(CONFIG_DEVICE, device_update());  //用于更新模拟器中的设备状态。
   }
 }
 
