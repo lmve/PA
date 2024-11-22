@@ -92,6 +92,16 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_p(char *args) {
+  if (args == NULL) {
+    printf("No args\n");
+    return 0;
+  }
+
+  bool flag = false;
+  expr(args, &flag);
+  return 0;
+}
 
 
 static int cmd_help(char *args);
@@ -107,6 +117,7 @@ static struct {
   { "x", "Scan memory", cmd_x},
   { "info", "Print the program status", cmd_info},
   { "si", "Make the program execute N instructions step by step and then pause, When N is  not specified default 1.", cmd_si},
+  { "p", "Expression evaluation", cmd_p},
   /* TODO: Add more commands */
 
 };

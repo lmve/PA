@@ -46,6 +46,12 @@ static void execute(uint64_t n) {
 - 指针运算超出数组边界
 
 6. **修复quit**
-
+在 quit 时设置状态
+```
+static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
+  return -1;
+}
+```
 
 
