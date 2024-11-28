@@ -24,6 +24,9 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 word_t paddr_read(paddr_t addr, int len);
+void watchpoint_display();
+void delete_watchpoint(int no);
+void create_watchpoint(char* args);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -73,6 +76,7 @@ static int cmd_info(char *args) {
     isa_reg_display();
   } else if (strcmp(args, "w") == 0) {
     // 打印监视点信息
+    watchpoint_display();
   }
   return 0;
 }
@@ -103,6 +107,19 @@ static int cmd_p(char *args) {
   return 0;
 }
 
+static int cmd_d(char* args) {
+  if(args == NULL) {
+    printf("No args.\n");
+  } else {
+    delete_watchpoint(atoi(args));
+  }
+  return 0;
+}
+
+static int cmd_w(char* args) {
+  create_watchpoint(args);
+  return 0;
+}
 
 static int cmd_help(char *args);
 
@@ -118,6 +135,8 @@ static struct {
   { "info", "Print the program status", cmd_info},
   { "si", "Make the program execute N instructions step by step and then pause, When N is  not specified default 1.", cmd_si},
   { "p", "Expression evaluation", cmd_p},
+  { "d", "Delete watchpoint", cmd_d},
+  { "w", "Add watchpoint", cmd_w},
   /* TODO: Add more commands */
 
 };

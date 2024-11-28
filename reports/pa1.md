@@ -54,4 +54,27 @@ static int cmd_q(char *args) {
 }
 ```
 
+## Other
+**关于命令解析**
+- readline: 从标准输入读取一行文本，直到遇到换行符(\n)或者达到指定的最大字符数。
+```
+char* readline(char* prompt);
+-- prompt: 提示信息
+-- return：一个指向动态分配的字符串的指针
+```
+- strtok: 根据分隔符分割字符串
+```
+char* strtok(char* str, const char* delim);
+-- str: 要分割的字符串
+-- delim: 分隔字符串
+-- return: 返回指向下一个分割后的子字符串的指针，如果不再有分割的子字符串，返回 NULL
+```
+- sscanf: 从字符串中读取格式化的输入
+```
+int sscanf(const char* str, const char* format, ...);
+-- str: 要解析的字符串
+-- format: 格式化字符串，定义了如何从 str 中解析数据
+-- return: 返回成功解析的项数，如果遇到输入结束或错误，返回EOF
+```
+
 
